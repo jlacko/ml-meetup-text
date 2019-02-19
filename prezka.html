@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>#AI Text Classification</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Jindra Lacko" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/JLA-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# #AI Text Classification
+## In Context of the Czech Language
+### <a href="mailto:jindra@jla-data.net">Jindra Lacko</a>
+### <br>21.2.2019 @ H₂O.ai
+
+---
+
+
+
+# Agenda
+
+--
+
+## Keras for text sequences
+
+--
+
+## Challenges of the Czech language
+
+--
+
+## Possible solutions to them
+
+--
+
+## Two Tomios of Twitter
+
+---
+# Neural Network in Nutshell
+--
+
+## Ingests a matrix of numerical inputs
+
+--
+
+## Outputs a vector (or a matrix) of numerical outputs
+
+--
+
+## Inside is a bunch of clever math, from much of which we can abstract for the moment
+
+---
+# Keras Architecture for Text
+--
+
+![sample architecture](./img/architecture.png)
+
+--
+
+⮞ Encoding - from words &amp; sentences to a matrix of integers  
+
+--
+
+⮞ Embedding layer - from long sparse to short dense vectors  
+
+--
+
+⮞ Recurrent layer - the actual work of sequence "understanding"  
+
+--
+
+⮞ Dense layer - leads to a single (for binary classification) point unit  
+
+--
+
+⮞ Decoding - interpret a vector of probabilities
+
+
+---
+# Challenges of Czech Texts
+
+--
+
+### Small nation &amp; small community
+
+--
+
+### Complicated grammatical inflections  
+
+--
+
+### ⮞ Large vocabulary of forms
+
+--
+
+### ⮞ Inflected words are rare events  
+
+--
+
+### Loose structure of sentences 
+
+--
+``` 
+Prahou bloudil bílý kůň.
+Bílý kůň bloudil Prahou.
+```
+---
+# Tokenization
+
+### Process of parsing text to string building blocks
+
+--
+
+### ⮞ character based (limited use)
+
+--
+
+### ⮞ word based (mainstream)   
+
+--
+
+### String tokens are replaced by numeric reference
+
+--
+
+### Constant vocabulary (dev / prod) is crucial
+
+--
+
+### Special value (zero) for padding to fixed length
+
+---
+# Lemmatization
+
+### [Lemmatization](https://en.wikipedia.org/wiki/Lemmatisation) involves grouping together inflected forms of a word (dictionary form)
+--
+
+###  Both tokenziation and lemmatization can be performed via package [`udpipe` by úfal](http://ufal.mff.cuni.cz/udpipe) 
+--
+
+
+
+```r
+white_horse &lt;- paste("bílý kůň", "bílého koně","bílému koni",
+                     "bílého koně","bílý koni","bílém koni",
+                     "bílým koněm") # bílý kůň v 7 pádech
+
+udpipe_annotate(udmodel, x = white_horse) %&gt;%
+  as.data.frame() %&gt;% pull(lemma) %&gt;% unique() %&gt;% print()
+```
+
+```
+## [1] "bílý" "kůň"
+```
+
+---
+# Recurrent layers for Czech
+--
+
+## In theory several options:  
+
+--
+
+⮞ simple RNN  
+⮞ Long Short Term Memory (LSTM)  
+⮞ Gated Recurrent Unit (GRU)  
+⮞ others (ConvLSTM2D, CuDNNLSTM etc.) 
+
+--
+
+## In practice LSTM is often the best
+
+--
+
+### Bidirectional arrangement (usually) improves performance for Czech grammar 
+
+---
+# Tomio Okamura: real or fake?
+
+--
+
+Two Tomios of Twitter:  which one is the *real one*? [@tomio_cz](https://twitter.com/tomio_cz) or [@Tomio_Okamura](https://twitter.com/tomio_okamura)?  
+
+--
+
+![dos Tomios](./img/mugshots.jpg)
+
+--
+
+Easy for humans, slightly more challenging for AI (not exactly impossible though :)
+
+---
+# Get Data
+
+--
+
+Tweets are downloaded with package `rtweet`, balanced via `caret` &amp; lemmatized.
+
+
+```r
+source("./code/1-stahnout-dataset.R") # stahnout dataset
+```
+
+```
+## Staženo 4965 tweetů; vyváženo na 3450 tweetů.
+## 
+##      tomio_cz Tomio_Okamura 
+##          1725          1725
+```
+
+```r
+source("./code/2-tweety-do-slov.R") # rozbít do slov (lemmat)
+```
+
+```
+## Zpracováno 53118 slov, což odpovídá 213 normostranám,
+## a tedy ~3 diplomkám na VŠE :)
+```
+
+--
+### A brief sample:
+
+
+```
+## Tomio Okamura: Zcela nekompetentní ministr: prostřednictvím
+## @YouTube
+```
+
+```
+## Myslel jsem, že Míra Kalousek zvádne exnout Balantínku za
+## míň, než za 10 minut.
+```
+
+---
+# Plain Vanilla LSTM
+
+16 LSTM units, bidirectional + 1 dense point
+--
+
+```r
+source("./code/3-plain-vanilla-BI-LSTM.R")
+```
+
+```
+## Validation Accuracy after 15 epochs: 74.78%
+```
+
+&lt;img src="prezka_files/figure-html/plain-vanilla-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+---
+
+# Two LSTMs Stacked
+2 × 16 LSTM units, bidirectional (stacked on top) + 1 dense point
+--
+
+```r
+source("./code/4-stacked-BI-LSTM.R")
+```
+
+```
+## Validation Accuracy after 15 epochs: 91.88%
+```
+
+&lt;img src="prezka_files/figure-html/stacked-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+---
+
+# Text (LSTM) + metadata
+
+16 LSTM units, bidirectional + 2 extra inputs + 3 dense layers &amp; 1 point
+--
+
+```r
+source("./code/5-BI-LSTM+extra-data.R")
+```
+
+```
+## Validation Accuracy after 15 epochs: 94.28%
+```
+
+&lt;img src="prezka_files/figure-html/metadata-included-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+---
+# Conclusions
+
+--
+
+### Keras neural network architecture is very flexible (at computational cost)
+
+--
+
+### Keras tokenizer is *not* a good first choice for Czech language (udpipe is)
+
+--
+
+### Lemmatization of text decreases form variance without sacrificing (too much) information
+
+--
+
+### Bigger (both network and dataset) is usually better than what was shown in Tomio examples
+
+---
+class: inverse, middle, center
+
+# Closing Remarks
+
+--
+
+### Text classification with [`keras`](https://keras.rstudio.com/) &amp; [`udpipe`](https://github.com/bnosac/udpipe) is fun!
+
+--
+&lt;br&gt;
+This presentation (including source code) is on GitHub  
+[https://github.com/jlacko/ml-meetup-text](https://github.com/jlacko/ml-meetup-text)  
+
+--
+&lt;br&gt;&lt;br&gt;
+Jindra Lacko  
+[jindra@jla-data.net](mailto:jindra@jla-data.net)  
+[www.jla-data.net](http://www.jla-data.net)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
