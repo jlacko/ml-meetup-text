@@ -11,7 +11,7 @@ h1 {font-family: 'Roboto'; font-weight: bold; color: #191970; margin-bottom: +15
 h2 {font-family: 'Roboto'; font-weight: normal; color:#191970; margin-top: -0px; margin-bottom: +20px;} 
 h3 {font-family: 'Roboto'; font-weight: normal; color:#191970; margin-top: -0px; margin-bottom: +20px;} 
 
-/* erkový skript ve Fira Code, protože je prostě boží... :) */
+/* skript ve Fira Code, protože je prostě boží... :) */
 .remark-code, .remark-inline-code { font-family: 'Fira Code', monospace; }
 
 /* reverzní barva tmavě modrá */
@@ -25,3 +25,9 @@ h3 {font-family: 'Roboto'; font-weight: normal; color:#191970; margin-top: -0px;
 .inverse h2 {color: #FFFFFF; }
 .inverse h3 {color: #FFFFFF; }
 .inverse {color: #FFFFFF; }
+
+/* všechny obrázky zásadně na střed! */
+img {
+    display: block;
+    margin: 0 auto;
+}

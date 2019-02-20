@@ -13,7 +13,7 @@ class: center, middle, inverse, title-slide
 
 # #AI Text Classification
 ## In Context of the Czech Language
-### <a href="mailto:jindra@jla-data.net">Jindra Lacko</a>
+### Jindra Lacko
 ### <br>21.2.2019 @ H₂O.ai
 
 ---
@@ -55,8 +55,11 @@ class: center, middle, inverse, title-slide
 ---
 # Keras Architecture for Text
 --
+&lt;div class="centered"&gt;
 
 ![sample architecture](./img/architecture.png)
+
+&lt;/div&gt;
 
 --
 
@@ -122,11 +125,11 @@ Bílý kůň bloudil Prahou.
 
 --
 
-### String tokens are replaced by numeric reference
+### String tokens are replaced by numeric reference for Keras to digest
 
 --
 
-### Constant vocabulary (dev / prod) is crucial
+### Constant vocabulary (dev / test / prod) is crucial
 
 --
 
@@ -144,9 +147,8 @@ Bílý kůň bloudil Prahou.
 
 
 ```r
-white_horse &lt;- paste("bílý kůň", "bílého koně","bílému koni",
-                     "bílého koně","bílý koni","bílém koni",
-                     "bílým koněm") # bílý kůň v 7 pádech
+white_horse &lt;- paste("bílý kůň", "bílého koně", "bílému koni", "bílého koně",
+                     "bílý koni", "bílém koni", "bílým koněm") # bílý kůň v 7 pádech
 
 udpipe_annotate(udmodel, x = white_horse) %&gt;%
   as.data.frame() %&gt;% pull(lemma) %&gt;% unique() %&gt;% print()
@@ -225,13 +227,11 @@ source("./code/2-tweety-do-slov.R") # rozbít do slov (lemmat)
 
 
 ```
-## Tomio Okamura: Zcela nekompetentní ministr: prostřednictvím
-## @YouTube
+## Tomio Okamura: Zcela nekompetentní ministr: prostřednictvím @YouTube
 ```
 
 ```
-## Myslel jsem, že Míra Kalousek zvádne exnout Balantínku za
-## míň, než za 10 minut.
+## Myslel jsem, že Míra Kalousek zvádne exnout Balantínku za míň, než za 10 minut.
 ```
 
 ---
@@ -245,7 +245,7 @@ source("./code/3-plain-vanilla-BI-LSTM.R")
 ```
 
 ```
-## Validation Accuracy after 15 epochs: 74.78%
+## Validation Accuracy after 15 epochs: 85.51%
 ```
 
 &lt;img src="prezka_files/figure-html/plain-vanilla-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -260,7 +260,7 @@ source("./code/4-stacked-BI-LSTM.R")
 ```
 
 ```
-## Validation Accuracy after 15 epochs: 91.88%
+## Validation Accuracy after 15 epochs: 90.14%
 ```
 
 &lt;img src="prezka_files/figure-html/stacked-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -276,7 +276,7 @@ source("./code/5-BI-LSTM+extra-data.R")
 ```
 
 ```
-## Validation Accuracy after 15 epochs: 94.28%
+## Validation Accuracy after 15 epochs: 93.26%
 ```
 
 &lt;img src="prezka_files/figure-html/metadata-included-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -285,7 +285,7 @@ source("./code/5-BI-LSTM+extra-data.R")
 
 --
 
-### Keras neural network architecture is very flexible (at computational cost)
+### Keras neural network architecture is very flexible (at a cost)
 
 --
 
@@ -323,7 +323,8 @@ Jindra Lacko
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": false
+"countIncrementalSlides": false,
+"ratio": "16:9"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

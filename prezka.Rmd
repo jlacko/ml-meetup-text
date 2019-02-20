@@ -1,7 +1,7 @@
 ---
 title: '\#AI Text Classification'
 subtitle: 'In Context of the Czech Language'
-author: '[Jindra Lacko](mailto:jindra@jla-data.net)'
+author: 'Jindra Lacko'
 date: '<br>21.2.2019 @ H₂O.ai'
 output:
   xaringan::moon_reader:
@@ -11,6 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      ratio: "16:9"
 ---
 
 ```{r setup, include=FALSE}
@@ -53,8 +54,11 @@ library(tidyverse)
 ---
 # Keras Architecture for Text
 --
+<div class="centered">
 
 ![sample architecture](./img/architecture.png)
+
+</div>
 
 --
 
@@ -120,11 +124,11 @@ Bílý kůň bloudil Prahou.
 
 --
 
-### String tokens are replaced by numeric reference
+### String tokens are replaced by numeric reference for Keras to digest
 
 --
 
-### Constant vocabulary (dev / prod) is crucial
+### Constant vocabulary (dev / test / prod) is crucial
 
 --
 
@@ -151,9 +155,8 @@ udmodel <- udpipe_load_model(file = posledni_udpipe) # načtení modelu pro udpi
 ```
 
 ```{r lemma-visible, echo = T, eval = T, cache = T}
-white_horse <- paste("bílý kůň", "bílého koně","bílému koni",
-                     "bílého koně","bílý koni","bílém koni",
-                     "bílým koněm") # bílý kůň v 7 pádech
+white_horse <- paste("bílý kůň", "bílého koně", "bílému koni", "bílého koně",
+                     "bílý koni", "bílém koni", "bílým koněm") # bílý kůň v 7 pádech
 
 udpipe_annotate(udmodel, x = white_horse) %>%
   as.data.frame() %>% pull(lemma) %>% unique() %>% print()
@@ -211,8 +214,8 @@ source("./code/2-tweety-do-slov.R") # rozbít do slov (lemmat)
 ### A brief sample:
 
 ```{r ochutnavka, echo = F, eval = T}
-tweets[tweets$name == "tomio_cz",]$text[1] %>% str_wrap(width = 60) %>% writeLines()
-tweets[tweets$name == "Tomio_Okamura",]$text[1] %>% str_wrap(width = 60) %>% writeLines()
+tweets[tweets$name == "tomio_cz",]$text[1] %>% str_wrap(width = 80) %>% writeLines()
+tweets[tweets$name == "Tomio_Okamura",]$text[1] %>% str_wrap(width = 80) %>% writeLines()
 ```
 
 ---
@@ -220,7 +223,7 @@ tweets[tweets$name == "Tomio_Okamura",]$text[1] %>% str_wrap(width = 60) %>% wri
 
 16 LSTM units, bidirectional + 1 dense point
 --
-```{r plain-vanilla, echo = T, eval = T, message = F, warning = F, cache = T, out.width = '100%', fig.align="center", fig.asp = 0.4, dpi = 150}
+```{r plain-vanilla, echo = T, eval = T, message = F, warning = F, cache = T, out.width = '100%', fig.align="center", fig.asp = 0.33, dpi = 250}
 source("./code/3-plain-vanilla-BI-LSTM.R")
 ```
 ---
@@ -228,7 +231,7 @@ source("./code/3-plain-vanilla-BI-LSTM.R")
 # Two LSTMs Stacked
 2 × 16 LSTM units, bidirectional (stacked on top) + 1 dense point
 --
-```{r stacked, echo = T, eval = T, message = F, warning = F, cache = T, out.width = '100%', fig.align="center", fig.asp = 0.4, dpi = 150}
+```{r stacked, echo = T, eval = T, message = F, warning = F, cache = T, out.width = '100%', fig.align="center", fig.asp = 0.33, dpi = 250}
 source("./code/4-stacked-BI-LSTM.R")
 ```
 ---
@@ -237,7 +240,7 @@ source("./code/4-stacked-BI-LSTM.R")
 
 16 LSTM units, bidirectional + 2 extra inputs + 3 dense layers & 1 point
 --
-```{r metadata-included, echo = T, eval = T, message = F, warning = F, cache = T, out.width = '100%', fig.align="center", fig.asp = 0.4, dpi = 150}
+```{r metadata-included, echo = T, eval = T, message = F, warning = F, cache = T, out.width = '100%', fig.align="center", fig.asp = 0.33, dpi = 250}
 source("./code/5-BI-LSTM+extra-data.R")
 ```
 ---
@@ -245,7 +248,7 @@ source("./code/5-BI-LSTM+extra-data.R")
 
 --
 
-### Keras neural network architecture is very flexible (at computational cost)
+### Keras neural network architecture is very flexible (at a cost)
 
 --
 
