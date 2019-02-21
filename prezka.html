@@ -53,45 +53,42 @@ class: center, middle, inverse, title-slide
 ## Inside is a bunch of clever math, from much of which we can abstract for the moment
 
 ---
-# Keras Architecture for Text
+# Basic Keras Architecture for Text
 --
-&lt;div class="centered"&gt;
-
+.pull-left[
 ![sample architecture](./img/architecture.png)
-
-&lt;/div&gt;
-
---
-
-⮞ Encoding - from words &amp; sentences to a matrix of integers  
+]
 
 --
 
-⮞ Embedding layer - from long sparse to short dense vectors  
+### **Encoding** strings to integer matrix
 
 --
 
-⮞ Recurrent layer - the actual work of sequence "understanding"  
+### **Embedding layer** from long sparse to short dense vectors 
 
 --
 
-⮞ Dense layer - leads to a single (for binary classification) point unit  
+### **Recurrent layer** the actual work of sequence "understanding"  
 
 --
 
-⮞ Decoding - interpret a vector of probabilities
+### **Dense layer** with a single point unit
 
+--
+
+### **Decoding** interpret a numeric vector  
 
 ---
 # Challenges of Czech Texts
 
 --
 
-### Small nation &amp; small community
+## Small nation &amp; small community
 
 --
 
-### Complicated grammatical inflections  
+## Complicated grammatical inflections  
 
 --
 
@@ -103,7 +100,7 @@ class: center, middle, inverse, title-slide
 
 --
 
-### Loose structure of sentences 
+## Loose structure of sentences 
 
 --
 ``` 
@@ -289,7 +286,7 @@ source("./code/5-BI-LSTM+extra-data.R")
 
 --
 
-### Keras tokenizer is *not* a good first choice for Czech language (udpipe is)
+### Default Keras tokenizer is *not* a good first choice for Czech language (udpipe is)
 
 --
 
