@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>#AI Text Classification</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Jindra Lacko" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="libs/JLA-fonts.css" type="text/css" />
@@ -204,10 +204,10 @@ source("./code/1-stahnout-dataset.R") # stahnout dataset
 ```
 
 ```
-## Staženo 4965 tweetů; vyváženo na 3450 tweetů.
+## Staženo 5027 tweetů; vyváženo na 3610 tweetů.
 ## 
 ##      tomio_cz Tomio_Okamura 
-##          1725          1725
+##          1805          1805
 ```
 
 ```r
@@ -215,8 +215,8 @@ source("./code/2-tweety-do-slov.R") # rozbít do slov (lemmat)
 ```
 
 ```
-## Zpracováno 53118 slov, což odpovídá 213 normostranám,
-## a tedy ~3 diplomkám na VŠE :)
+## Zpracováno 55562 slov, což odpovídá 223 normostranám,
+## a tedy ~3.2 diplomkám na VŠE :)
 ```
 
 --
@@ -224,11 +224,12 @@ source("./code/2-tweety-do-slov.R") # rozbít do slov (lemmat)
 
 
 ```
-## Tomio Okamura: Zcela nekompetentní ministr: prostřednictvím @YouTube
+## Tomio Okamura: Setkání premiérů V4: prostřednictvím @YouTube
 ```
 
 ```
-## Myslel jsem, že Míra Kalousek zvádne exnout Balantínku za míň, než za 10 minut.
+## Ceska media zcela ignoruji vysledky komunalnich voleb v Dolnim Sasku. CDU
+## vyrazne vitezstvi, SPD vyrazne druha ...
 ```
 
 ---
@@ -242,7 +243,7 @@ source("./code/3-plain-vanilla-BI-LSTM.R")
 ```
 
 ```
-## Validation Accuracy after 15 epochs: 85.51%
+## Validation Accuracy after 15 epochs: 86.43%
 ```
 
 &lt;img src="prezka_files/figure-html/plain-vanilla-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -257,7 +258,7 @@ source("./code/4-stacked-BI-LSTM.R")
 ```
 
 ```
-## Validation Accuracy after 15 epochs: 90.14%
+## Validation Accuracy after 15 epochs: 90.72%
 ```
 
 &lt;img src="prezka_files/figure-html/stacked-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -273,7 +274,7 @@ source("./code/5-BI-LSTM+extra-data.R")
 ```
 
 ```
-## Validation Accuracy after 15 epochs: 93.26%
+## Validation Accuracy after 15 epochs: 91.83%
 ```
 
 &lt;img src="prezka_files/figure-html/metadata-included-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -316,6 +317,7 @@ Jindra Lacko
 [jindra@jla-data.net](mailto:jindra@jla-data.net)  
 [www.jla-data.net](http://www.jla-data.net)
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -326,16 +328,57 @@ Jindra Lacko
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -349,7 +392,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
