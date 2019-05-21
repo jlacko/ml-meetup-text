@@ -8,6 +8,10 @@ Repo with slides & source code for my presentation on H₂O.ai [Meetup](https://
 ### For my Czech speaking friends:
 Prezentace a podkladový kód na vystoupení **Text Classification: Challenges posed by the Czech Language** na [Meetupu](https://www.meetup.com/Prague-Artificial-Intelligence-Deep-Learning/events/258338162/) 21. února 2019 v prostorách H₂O.ai v Praze - Karlíně.
 
+<p align="center">
+  <img src="https://github.com/jlacko/ml-meetup-tomio/blob/master/img/mugshots.jpg?raw=true" alt="Pravý nebo falešný?"/>
+</p>
+
 Vlastní prezentace je v souboru [prezka.html](https://rawcdn.githack.com/jlacko/ml-meetup-text/513ad2bae3348ec04cb8dcf2cb4e6fb78bb6b198/prezka.html), s tím že podkladový R Markdown dokument je *prezka.Rmd*.
 
 Podkladová data jsou stažena k úterku 19. února 2019 ráno v adresáři `/data`. 
